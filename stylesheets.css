@@ -1,0 +1,28 @@
+body {
+    background-color: black;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+#background {
+    background: url("http://a1star.com/images/space-black-large.gif");
+    position: absolute;
+    left: 120px;
+    top: 10px;
+}
+
+#score {
+    padding-top: 5%;
+    font-family: cursive;
+    color: red;
+    font-size: 20px;
+    position: absolute;
+    margin-bottom: 20px;
+    margin-left: 15px;
+    margin-top: 30px;
+    float: left;
+}
+#healthbar {
+    position: absolute;
+    
+}

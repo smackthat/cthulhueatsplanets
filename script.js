@@ -51,7 +51,7 @@ $(document).ready(function() {
     
         this.move = function() {
             this.posX -= 1;
-            posX -= 1;
+            posX = this.posX;
         };
         
     
@@ -83,7 +83,9 @@ $(document).ready(function() {
             this.scale -= this.scaleSpd * ms / 1000.0;
             
             if (this.scale <= 0) {	
-                this.scale = 0;	
+                this.scale = 0;
+                scale = 0;
+                
                 
             }
 			this.x += this.velocityX * ms/1000.0;
@@ -257,6 +259,9 @@ $(document).ready(function() {
             }
         
         }
+        if (Particles.length === 50) {
+            Particles.splice(0,40);
+        }
         for (var i= 0; i < Particles.length; i++) {
             var currentParticle = Particles[i];
             currentParticle.update(10);
@@ -272,3 +277,4 @@ $(document).ready(function() {
     setInterval(generatePlanet, 6000);
 
 });
+
