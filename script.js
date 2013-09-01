@@ -1,5 +1,6 @@
 var Planets = [];
 var Particles = [];
+var Enemies = [];
 
 
 //The scrolling background...
@@ -29,28 +30,65 @@ $(document).ready(function() {
     window.addEventListener("keydown",doKeyDown, true);
     var playerX = 50;
     var playerY = 200;
+    var playerWidth = 80;
+    var playerHeight = 80;
+    var playerDead = false;
+    
+    //For additional setIntervals...
+    var tick1;
+    var tick2;
+    var tick3;
     
     
     
-    //Let's import the Cthulhu sprite
+    //Let's import the sprites
     var cthulhu = new Image();
     cthulhu.src = 'http://i1287.photobucket.com/albums/a632/MrDeltoid/pruitpruit_zpsc847d437.png';
+    var unicorn = new Image();
+    unicorn.src = 'http://i1287.photobucket.com/albums/a632/MrDeltoid/unicorn1_zps9f61bb5b.png';
     
     function init() {
+        clearBg();
         playerX = 50;
         playerY = 200;
-        score = 0;
+        totalScore.reset();
+        currentHealth.reset();
+        playerDead = false;
+        playerInvulnerable = false;
+        setInterval(gameLoop,10);
+        setInterval(generatePlanet, 6000);
+        setInterval(generateEnemy, 3383);
+        
     }
+    
+    function Enemy(posX, posY) {
+        this.posX = posX;
+        this.posY = posY;
+        this.speed = 3;
+        this.width = 100;
+        this.height = 80;
+        
+        this.move = function() {
+            this.posX -= this.speed;
+            posX = this.posX;
+        };
+        
+        this.draw = function() {
+            ctx.drawImage(unicorn, posX, posY, this.width, this.height);
+        };
+    };
     
     function Planet(posX, posY, color1, color2) {
         this.posX = posX;
         this.posY = posY;
         this.radius = 100;
+        this.height = 100;
+        this.width = 100;
         this.color1 = color1;
         this.color2 = color2;
     
         this.move = function() {
-            this.posX -= 1;
+            this.posX -= 1.5;
             posX = this.posX;
         };
         
@@ -95,12 +133,10 @@ $(document).ready(function() {
         
         this.draw = function(ctx)
 		{
-			// translating the 2D context to the particle coordinates
 			ctx.save();
 			ctx.translate(this.x, this.y);
 			ctx.scale(this.scale, this.scale);
 			
-			// drawing a filled circle in the particle's local space
 			ctx.beginPath();
 			ctx.arc(0, 0, this.radius, 0, Math.PI*2, true);
 			ctx.closePath();
@@ -154,9 +190,15 @@ $(document).ready(function() {
 	
 	    return min + Math.random()*(max-min);
     };
+    
+    var playerInvulnerable = false;
+    
+    var foobar = function makeVulnerable() {
+        playerInvulnerable = false;
+    };
 
     function drawPlayer() {
-        ctx.drawImage(cthulhu, playerX, playerY,80,80);
+        ctx.drawImage(cthulhu, playerX, playerY, playerWidth, playerHeight);
     };
 
     function makeGradient(posX, posY, color1, color2) {
@@ -181,9 +223,18 @@ $(document).ready(function() {
         
     };
     
-    function isCollision(i) {
-        return playerX + 80 > Planets[i].posX && Planets[i].posX + 100 > playerX &&
-                   playerY + 80 > Planets[i].posY && Planets[i].posY + 100 > playerY;
+    function generateEnemy() {
+        var posX = 1050;
+        var posY = Math.floor(80 + Math.random()*450);
+        var nmy = new Enemy(posX,posY);
+        nmy.draw();
+        Enemies.push(nmy);
+        
+    };
+    
+    function isCollision(arrayP) {
+        return playerX + playerWidth > arrayP.posX && arrayP.posX + arrayP.width > playerX &&
+                   playerY + playerHeight > arrayP.posY && arrayP.posY + arrayP.height > playerY;
     };
     
     function Score() {
@@ -195,6 +246,11 @@ $(document).ready(function() {
             this.update();
         };
         
+        this.reset = function() {
+            this.points = 0;
+            this.update();
+        };
+        
         this.update = function() {
             score.textContent = "Score: " + this.points;
         };
@@ -202,10 +258,54 @@ $(document).ready(function() {
     
     var totalScore = new Score();
     
+    function Health() {
+        var playerHealth = document.getElementById('health');
+        this.points = 100;
+        
+        this.add = function(points) {
+            this.points += points;
+            this.update();
+        };
+        
+        this.substract = function(points) {
+            this.points -= points;
+            this.update();
+        };
+        
+        this.reset = function() {
+            this.points = 100;
+            this.update();
+        }
+        
+        this.update = function() {
+            playerHealth.style.width = this.points + "%";
+            if (this.points === 0) {
+                gameOver();
+            }
+        };
+    };
+    
+    var currentHealth = new Health();
+    
   
     
     function clearBg() {
         canvas.width = canvas.width;
+    };
+    
+    function gameOver() {
+        playerDead = true;
+        clearBg();
+        clearInterval(theLoop);
+        clearInterval(poop);
+        clearInterval(enemySpawner);
+        clearInterval(tick1);
+        clearBg();
+        ctx.fillStyle = "red";
+        ctx.font = "bold 50px cursive";
+        ctx.fillText("Game Over :P", 400, 300 );
+        setTimeout(init, 3000);
+        
     };
     
     
@@ -235,7 +335,7 @@ $(document).ready(function() {
             alert("Current particles: " + Particles.length);
         }
         if (e.keyCode === 73) {
-            alert("Score: " + Score.points);
+            alert("Enemies: " + Enemies.length);
         }
     };
     
@@ -243,19 +343,50 @@ $(document).ready(function() {
     
     function gameLoop() {
             clearBg();
-            drawPlayer();
+            if (!playerDead) { 
+                drawPlayer();
+            }
+        
+        for (var i = 0; i < Enemies.length; i++) {
+            if (Enemies[i].posX < -1000) {
+                Enemies.splice(i,1);
+            }
+            else {
+                Enemies[i].draw();
+                Enemies[i].move();
+                
+            }
+            if (isCollision(Enemies[i])) {
+                if (!playerInvulnerable) {
+                    currentHealth.substract(25);
+                    playerInvulnerable = true;
+                    setTimeout(foobar, 1500);
+                   
+                }
+            }
+        }
+        
         for (var i = 0; i < Planets.length; i++) {
             if (Planets[i].posX < -500) {
                 Planets.splice(i,1);
             }
-                else {
+            else {
             Planets[i].draw();
             Planets[i].move();
-                }
-            if (isCollision(i)) {
+            }
+            if (isCollision(Planets[i])) {
+                drawPlayer();
                 explosion(Planets[i]);
                 Planets.splice(i,1);
                 totalScore.add(10);
+                if (totalScore.points % 100 === 0) {
+                    if (currentHealth.points < 100) {
+                        currentHealth.add(10);
+                    }
+                }
+                if (totalScore.points === 10) {
+                    tick1 = setInterval(generateEnemy, 2363);
+                }
             }
         
         }
@@ -273,8 +404,9 @@ $(document).ready(function() {
     
     
 
-    setInterval(gameLoop,10);
-    setInterval(generatePlanet, 6000);
+    var theLoop = setInterval(gameLoop,10);
+    var poop = setInterval(generatePlanet, 6000);
+    var enemySpawner = setInterval(generateEnemy, 3383);
 
 });
 
