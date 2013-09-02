@@ -37,7 +37,6 @@ $(document).ready(function() {
     //For additional setIntervals...
     var tick1;
     var tick2;
-    var tick3;
     
     
     
@@ -384,9 +383,12 @@ $(document).ready(function() {
                         currentHealth.add(10);
                     }
                 }
-                if (totalScore.points === 10) {
+                if (totalScore.points === 200) {
                     tick1 = setInterval(generateEnemy, 2363);
                 }
+				if (totalScore.points === 400) {
+					tick2 = setInterval(generateEnemy, 1975);
+					}
             }
         
         }
