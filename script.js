@@ -1,3 +1,4 @@
+
 var Planets = [];
 var Particles = [];
 var Enemies = [];
@@ -37,33 +38,42 @@ $(document).ready(function() {
     //For additional setIntervals...
     var tick1;
     var tick2;
+    var tick3;
+    var tick1Active = false;
+    var tick2Active = false;
+    var tick3Active = false;
+    
+    
     
     
     
     //Let's import the sprites
     var cthulhu = new Image();
-    cthulhu.src = 'http://i1287.photobucket.com/albums/a632/MrDeltoid/pruitpruit_zpsc847d437.png';
+    cthulhu.src = 'cthulhu.png';
     var unicorn = new Image();
-    unicorn.src = 'http://i1287.photobucket.com/albums/a632/MrDeltoid/unicorn1_zps9f61bb5b.png';
+    unicorn.src = 'unicorn.png';
     
     function init() {
         clearBg();
+        Planets.splice(0,Planets.length);
+        Enemies.splice(0,Enemies.length);
+        Particles.splice(0,Particles.length);
         playerX = 50;
         playerY = 200;
         totalScore.reset();
         currentHealth.reset();
         playerDead = false;
         playerInvulnerable = false;
-        setInterval(gameLoop,10);
-        setInterval(generatePlanet, 6000);
-        setInterval(generateEnemy, 3383);
+        theLoop = setInterval(gameLoop,10);
+        poop = setInterval(generatePlanet, 6000);
+        enemySpawner = setInterval(generateEnemy, 3383);
         
     }
     
     function Enemy(posX, posY) {
         this.posX = posX;
         this.posY = posY;
-        this.speed = 3;
+        this.speed = 2.5;
         this.width = 100;
         this.height = 80;
         
@@ -224,7 +234,7 @@ $(document).ready(function() {
     
     function generateEnemy() {
         var posX = 1050;
-        var posY = Math.floor(80 + Math.random()*450);
+        var posY = Math.floor(50 + Math.random()*500);
         var nmy = new Enemy(posX,posY);
         nmy.draw();
         Enemies.push(nmy);
@@ -292,50 +302,58 @@ $(document).ready(function() {
         canvas.width = canvas.width;
     };
     
+    
     function gameOver() {
         playerDead = true;
         clearBg();
         clearInterval(theLoop);
         clearInterval(poop);
         clearInterval(enemySpawner);
-        clearInterval(tick1);
+        if (tick1Active) {
+            clearInterval(tick1);
+            tick1Active = false;
+        }
+        if (tick2Active) {
+            clearInterval(tick2);
+            tick2Active = false;
+        }
+        if (tick3Active) {
+            clearInterval(tick3);
+            tick3Active = false;
+        }
         clearBg();
         ctx.fillStyle = "red";
         ctx.font = "bold 50px cursive";
-        ctx.fillText("Game Over :P", 400, 300 );
+        ctx.fillText("Game Over...", 300, 300 );
         setTimeout(init, 3000);
         
     };
     
     
     function doKeyDown(e) {
-        if (e.keyCode === 87 || e.keyCode === 38) {
+        if (e.keyCode === 87) {
             if (playerY < 0 ) {
                 playerY = playerY;
             }
             else {
             playerY = playerY - 5;
-            drawPlayer();
+            if (!playerDead) {
+                drawPlayer();
+            }
             }
         }
-        if (e.keyCode === 83 || e.keyCode === 40) {
+        if (e.keyCode === 83) {
             if (playerY > 520) {
                 playerY = playerY;
             }
             else {
             playerY = playerY + 5;
-            drawPlayer();
+            if (!playerDead) {
+                drawPlayer();
+            }
             }
         }
-        if (e.keyCode === 75) {
-            alert("Particle 1 radius: " + Particles[0].radius);
-        }
-        if (e.keyCode === 76) {
-            alert("Current particles: " + Particles.length);
-        }
-        if (e.keyCode === 73) {
-            alert("Enemies: " + Enemies.length);
-        }
+       
     };
     
     //The main game loop,responsible for array iterations 'n stuff :)
@@ -357,9 +375,15 @@ $(document).ready(function() {
             }
             if (isCollision(Enemies[i])) {
                 if (!playerInvulnerable) {
+                    if (currentHealth.points <= 25) {
+                        currentHealth.points = 0;
+                        currentHealth.update();
+                    }
+                    else {
                     currentHealth.substract(25);
                     playerInvulnerable = true;
-                    setTimeout(foobar, 1500);
+                    setTimeout(foobar, 1000);
+                    }
                    
                 }
             }
@@ -380,15 +404,27 @@ $(document).ready(function() {
                 totalScore.add(10);
                 if (totalScore.points % 100 === 0) {
                     if (currentHealth.points < 100) {
+                        if (currentHealth.points > 90) {
+                            currentHealth.points = 100;
+                            currentHealth.update();
+                        }
+                        else {
                         currentHealth.add(10);
+                        }
                     }
                 }
                 if (totalScore.points === 200) {
-                    tick1 = setInterval(generateEnemy, 2363);
+                    tick1 = setInterval(generateEnemy, 2472);
+                    tick1Active = true;
                 }
-				if (totalScore.points === 400) {
-					tick2 = setInterval(generateEnemy, 1975);
-					}
+                if (totalScore.points === 400) {
+                    tick2 = setInterval(generateEnemy, 2117);
+                    tick2Active = true;
+                }
+                if (totalScore.points % 500 === 0) {
+                    tick3 = setInterval(generateEnemy, 500);
+                    tick3Active = true;
+                }
             }
         
         }
@@ -411,4 +447,5 @@ $(document).ready(function() {
     var enemySpawner = setInterval(generateEnemy, 3383);
 
 });
+
 

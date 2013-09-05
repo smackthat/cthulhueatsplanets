@@ -11,6 +11,15 @@ body {
     top: 10px;
     z-index: 1;
 }
+#instructions {
+    float: left;
+    position: absolute;
+    left: 5px;
+    top: 450px;
+    font-size: 18px;
+    font-family: cursive;
+    color: red;
+}
 
 #score {
     padding-top: 5%;
