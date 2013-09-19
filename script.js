@@ -49,9 +49,9 @@ $(document).ready(function() {
     
     //Let's import the sprites
     var cthulhu = new Image();
-    cthulhu.src = 'cthulhu.png';
+    cthulhu.src = "cthulhu.png";
     var unicorn = new Image();
-    unicorn.src = 'unicorn.png';
+    unicorn.src = "unicorn.png";
     
     function init() {
         clearBg();
@@ -331,7 +331,7 @@ $(document).ready(function() {
     
     
     function doKeyDown(e) {
-        if (e.keyCode === 87) {
+        if (e.keyCode === 87 || e.keyCode === 63) {
             if (playerY < 0 ) {
                 playerY = playerY;
             }
@@ -342,7 +342,7 @@ $(document).ready(function() {
             }
             }
         }
-        if (e.keyCode === 83) {
+        if (e.keyCode === 83 || e.keyCode === 57) {
             if (playerY > 520) {
                 playerY = playerY;
             }
