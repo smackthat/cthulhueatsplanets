@@ -6,7 +6,7 @@ body {
     overflow: hidden;
 }
 #background {
-    background: url("img/avaruus1.png");
+    background: url("img/avaruus.png");
 	background-repeat: repeat;
 	margin:0 auto;
 //  position: absolute;
