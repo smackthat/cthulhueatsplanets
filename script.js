@@ -392,8 +392,6 @@ $(document).ready(function() {
                     if (currentHealth.points <= 25) {
                         currentHealth.points = 0;
 						
-						cState = 1;
-						
                         currentHealth.update();
                     }
 					
