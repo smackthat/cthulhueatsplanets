@@ -5,7 +5,6 @@ var Enemies = [];
 
 
 //The scrolling background...
-
 var scrollSpeed = 20; 
 var step = 1; 				
 var current = 0;			
@@ -52,7 +51,13 @@ $(document).ready(function() {
     cthulhu.src = "cthulhu.png";
     var unicorn = new Image();
     unicorn.src = "unicorn.png";
-    
+	var cthulhu_wounded1 = new Image();
+    cthulhu_wounded1.src = "cthulhu_dmged1.png";
+	var cthulhu_wounded2 = new Image();
+    cthulhu_wounded2.src = "cthulhu_dmged2.png";
+	var cStates = [cthulhu, cthulhu_wounded1, cthulhu_wounded2];
+    var avatar = cStates[0]; 
+	
     function init() {
         clearBg();
         Planets.splice(0,Planets.length);
@@ -201,13 +206,9 @@ $(document).ready(function() {
     };
     
     var playerInvulnerable = false;
-    
-    var foobar = function makeVulnerable() {
-        playerInvulnerable = false;
-    };
 
     function drawPlayer() {
-        ctx.drawImage(cthulhu, playerX, playerY, playerWidth, playerHeight);
+        ctx.drawImage(avatar, playerX, playerY, playerWidth, playerHeight);
     };
 
     function makeGradient(posX, posY, color1, color2) {
@@ -240,7 +241,7 @@ $(document).ready(function() {
         Enemies.push(nmy);
         
     };
-    
+ 
     function isCollision(arrayP) {
         return playerX + playerWidth > arrayP.posX && arrayP.posX + arrayP.width > playerX &&
                    playerY + playerHeight > arrayP.posY && arrayP.posY + arrayP.height > playerY;
@@ -363,14 +364,19 @@ $(document).ready(function() {
 			playerX -= moveSpeed;
 			}
 	};
-    
+	
+	var invulSwitch = function mV(){
+		playerInvulnerable = false;
+	};
+	// Väläyttää eri avatarit osuman merkiksi
+    function hitReg(){
+		// jonkinlainen systeemi grafiikoiden flippaamiseen.
+		// Eri tilat on cStates arrayssa
+	};
     //The main game loop,responsible for array iterations 'n stuff :)
-    //FIXME: Ei tarvitse tarkistaa onko pelaaja elossa jokaisessa kohdassa koska menee inittiin kuolemisen jälkeen -> aloittaa uuden loopin. 
-
     function gameLoop() {
 			clearBg();
-            drawPlayer();
-        
+			drawPlayer();
         for (var i = 0; i < Enemies.length; i++) {
             if (Enemies[i].posX < -1000) {
                 Enemies.splice(i,1);
@@ -380,22 +386,28 @@ $(document).ready(function() {
                 Enemies[i].move();
                 
             }
+			
             if (isCollision(Enemies[i])) {
                 if (!playerInvulnerable) {
                     if (currentHealth.points <= 25) {
                         currentHealth.points = 0;
+						
+						cState = 1;
+						
                         currentHealth.update();
                     }
+					
                     else {
                     currentHealth.substract(25);
                     playerInvulnerable = true;
-                    setTimeout(foobar, 1000);
+                    setTimeout(invulSwitch, 1000);
                     }
                    
                 }
             }
+			
+		
         }
-        
         for (var i = 0; i < Planets.length; i++) {
             if (Planets[i].posX < -500) {
                 Planets.splice(i,1);
