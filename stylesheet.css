@@ -1,5 +1,6 @@
 body {
     background-color: black;
+    width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -8,6 +9,7 @@ body {
     background: url("img/avaruus1.png");
 	background-repeat: repeat-x;
 	background-repeat: repeat-y;
+	margin:0 auto;
 //  position: absolute;
 //	left: 120px;
 //	top: 10px;
