@@ -1,13 +1,14 @@
 body {
     background-color: black;
+    width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
 }
 #background {
-    background: url("img/avaruus.png");
-	background-repeat: repeat-x;
-	background-repeat: repeat-y;
+    background: url("img/avaruus2.png");
+	background-repeat: repeat;
+	margin:0 auto;
 //  position: absolute;
 //	left: 120px;
 //	top: 10px;
