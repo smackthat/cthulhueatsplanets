@@ -11,7 +11,7 @@ var step = 1;
 var current = 0;			
 var imageWidth = 71; // Oli 1000 		
 var restartWidth = 359;
-
+var moveSpeed = 7;
 
 var restartPosition = -(imageWidth - restartWidth);
 function scrollBg(){
@@ -328,43 +328,48 @@ $(document).ready(function() {
         setTimeout(init, 3000);
         
     };
-    
-    // FIXME: Liikuttaminen ylös ja alas eri metodeihin ja jättää näppäinten käsittely vaan tälle. Kapselointi ja kaikkea. 
-	// Esim. moveDown() ja moveUp() jotka sitten kutsuvat on drawPlayer() ja asettaa liikkumisnopeus eli monta pikseliä liikutaa jossain alustus metodissa.
+
     function doKeyDown(e) {
         if (e.keyCode === 87 || e.keyCode === 63) {
-            if (playerY < 0 ) {
-                playerY = playerY;
-            }
-            else {
-            playerY = playerY - 5;
-            if (!playerDead) {
-                drawPlayer();
-            }
-            }
+			moveDown();
         }
-        if (e.keyCode === 83 || e.keyCode === 57) {
-            if (playerY > 520) {
-                playerY = playerY;
-            }
-            else {
-            playerY = playerY + 5;
-            if (!playerDead) {
-                drawPlayer();
-            }
-            }
+        else if (e.keyCode === 83 || e.keyCode === 57) {
+			moveUp();
         }
-       
+		else if(e.keyCode === 68 || e.keyCode === 39) {
+			moveRight();
+		}
+		else if(e.keyCode === 65 || e.keyCode === 37) {
+			moveLeft();
+		}
     };
+	function moveDown(){
+		if(playerY > 0){
+			playerY -= moveSpeed;
+			}
+	};
+	function moveUp(){
+		if (playerY < 520) {
+            playerY += moveSpeed;
+        }    
+	};
+	function moveRight(){
+		if(playerX <= 900){
+			playerX += moveSpeed;
+			}
+	};
+	function moveLeft(){
+		if(playerX >= 50){
+			playerX -= moveSpeed;
+			}
+	};
     
     //The main game loop,responsible for array iterations 'n stuff :)
     //FIXME: Ei tarvitse tarkistaa onko pelaaja elossa jokaisessa kohdassa koska menee inittiin kuolemisen jälkeen -> aloittaa uuden loopin. 
 
     function gameLoop() {
-            clearBg();
-            if (!playerDead) { 
-                drawPlayer();
-            }
+			clearBg();
+            drawPlayer();
         
         for (var i = 0; i < Enemies.length; i++) {
             if (Enemies[i].posX < -1000) {
