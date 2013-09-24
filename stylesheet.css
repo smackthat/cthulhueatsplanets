@@ -8,6 +8,7 @@ body {
 #background {
     background: url("img/avaruus2.png");
 	background-repeat: repeat;
+	display:block;
 	margin:0 auto;
 //  position: absolute;
 //	left: 120px;
