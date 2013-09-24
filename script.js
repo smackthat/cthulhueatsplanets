@@ -74,8 +74,8 @@ $(document).ready(function() {
         this.posX = posX;
         this.posY = posY;
         this.speed = 2.5;
-        this.width = 100;
-        this.height = 80;
+        this.width = 135;
+        this.height = 63;
         
         this.move = function() {
             this.posX -= this.speed;
