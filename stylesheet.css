@@ -5,7 +5,9 @@ body {
     overflow: hidden;
 }
 #background {
-    background: url("http://a1star.com/images/space-black-large.gif");
+    background: url("/img/avaruus.png");
+	background-repeat: repeat-x;
+	background-repeat: repeat-y;
     position: absolute;
     left: 120px;
     top: 10px;
