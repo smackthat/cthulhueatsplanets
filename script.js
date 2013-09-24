@@ -9,7 +9,7 @@ var Enemies = [];
 var scrollSpeed = 20; 
 var step = 1; 				
 var current = 0;			
-var imageWidth = 1000;		
+var imageWidth = 71; // Oli 1000 		
 var restartWidth = 359;
 
 
@@ -18,7 +18,7 @@ function scrollBg(){
 	current -= step;
 	if (current == restartPosition) {current = 0;}   
 	$('#background').css("background-position",current+"px 0");
-	};
+	}; 
 			
 setInterval("scrollBg()", scrollSpeed);
 
@@ -329,7 +329,8 @@ $(document).ready(function() {
         
     };
     
-    
+    // FIXME: Liikuttaminen ylös ja alas eri metodeihin ja jättää näppäinten käsittely vaan tälle. Kapselointi ja kaikkea. 
+	// Esim. moveDown() ja moveUp() jotka sitten kutsuvat on drawPlayer() ja asettaa liikkumisnopeus eli monta pikseliä liikutaa jossain alustus metodissa.
     function doKeyDown(e) {
         if (e.keyCode === 87 || e.keyCode === 63) {
             if (playerY < 0 ) {
@@ -357,7 +358,8 @@ $(document).ready(function() {
     };
     
     //The main game loop,responsible for array iterations 'n stuff :)
-    
+    //FIXME: Ei tarvitse tarkistaa onko pelaaja elossa jokaisessa kohdassa koska menee inittiin kuolemisen jälkeen -> aloittaa uuden loopin. 
+
     function gameLoop() {
             clearBg();
             if (!playerDead) { 
