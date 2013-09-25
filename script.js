@@ -370,8 +370,13 @@ $(document).ready(function() {
 	};
 	// V‰l‰ytt‰‰ eri avatarit osuman merkiksi
     function hitReg(){
-		// jonkinlainen systeemi grafiikoiden flippaamiseen.
-		// Eri tilat on cStates arrayssa
+	// EaseJS SpriteSheeet
+	// Samaan kuvaan kaikki, jonka j‰lkeen kuvaa liikutetaan ja cropataan
+		drawPlayer(cState[1]);
+		setTimeout(drawPlayer[2], 350);
+		setTimeout(drawPlayer[0], 350);
+		
+		
 	};
     //The main game loop,responsible for array iterations 'n stuff :)
     function gameLoop() {
@@ -391,14 +396,14 @@ $(document).ready(function() {
                 if (!playerInvulnerable) {
                     if (currentHealth.points <= 25) {
                         currentHealth.points = 0;
-						
                         currentHealth.update();
                     }
 					
                     else {
                     currentHealth.substract(25);
                     playerInvulnerable = true;
-                    setTimeout(invulSwitch, 1000);
+					hitReg();
+					setTimeout(invulSwitch, 1000);
                     }
                    
                 }
