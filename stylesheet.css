@@ -6,7 +6,7 @@ body {
     overflow: hidden;
 }
 #background {
-    background: url("img/avaruus2.png");
+    background: url("spaceimage.gif");
 	background-repeat: repeat;
 	display:block;
 	margin:0 auto;

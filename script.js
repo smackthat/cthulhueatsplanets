@@ -9,7 +9,7 @@ var Enemies = [];
 var scrollSpeed = 20; 
 var step = 1; 				
 var current = 0;			
-var imageWidth = 71; // Oli 1000 		
+var imageWidth = 1000; // Oli 1000 		
 var restartWidth = 359;
 
 
